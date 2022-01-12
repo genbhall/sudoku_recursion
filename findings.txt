@@ -1,0 +1,94 @@
+Summarise your findings here (see specification).
+
+Step 1: Check which mystery board is unsolvable
+
+Using the recursion algorithm as per Q4 on the three mystery
+boards, can identify that mystery1.dat and mystery3.dat have valid
+solutions whilst mystery2.dat is unsolvable.
+
+Given the recursion algorithm attempts all valid possibilities before
+returning a false value, it can be said with confidence that mystery2
+is therefore unsolvable.
+
+***
+
+CHECKING DIFFICULTY BETWEEN MYSTERY1 AND MYSTERY3
+
+Note - there is ambiguity as to what "difficult" means in the context
+of solving a sudoku puzzle, as different methods of solving a puzzle
+will favour different puzzles. It is almost certainly not the case
+that a human will attempt to solve a sudoku puzzle using Q4's
+recursion algorithm as they are far less suited to computing many
+(sometimes hundreds-of-thousands) iterations using a trial-and-error
+approach to find a solution.
+
+Developing a complete algorithm that closely mimicks an expert human
+sudoku player is beyond the scope of my analysis. Therefore I will
+assume that testing the computer's difficulty in solving each puzzle
+(using a close variation of the Q4 algorithm) is a proxy for
+difficulty and has some correlation with human difficulty but this is
+definitely an area of further exploration with more time.
+
+***
+
+Step 2: Check whether mystery1 or mystery3 is more difficult by
+counting number of recursion calls required using unchanged Q4
+algorithm to solve the board.
+
+mystery1 board: 421,547 recursion calls before solution found
+mystery3 board: 14,134 recusion calls before solution found
+
+Just by counting the number of recursion calls using the Q4 algorithm,
+we can hypothesise that mystery1 board is more difficult to solve than
+mystery3 board.
+
+***
+
+Step 3: Solving for the '1'-'9' bias
+
+The Q4 algorithm has a bias towards solving puzzles
+that hit the correct input per cell early into the iteration cycle of
+'1'-'9' in numerical order. For example, starting at the top left of
+the board (as the algorithm does), if the first empty cell has a
+solution of '1', then by chance the algorithm never has to re-iterate
+that value and a solution will be found faster than if the solution to
+that number had been '9'.
+
+To mitigate this, I have created a new function to solve the board that takes in a 9
+argument array of inputs of characters from '1'-'9', and then ran the
+algorithm on mystery1 and mystery3 100 times each, randomly shuffling
+(using a pseudo-randomiser function which for the purposes of this
+task works as needed) the array order each time. I then took an
+average of the number of recursions calls needed for each solution for
+each puzzle with the results below:
+
+Average recursion calls to solve mystery1: 200,616
+Average recursion calls to solve mystery3: 14,757
+
+min-max recursion calls for mystery1: 164 - 437,808
+min-max recursion calls for mystery3: 493 - 29,063
+
+The results show that, accounting for any '1'-'9' bias in Q4, mystery1
+still remains the more difficult puzzle to solve. Therefore my answer
+in response to Q5 is that mystery1 is "extremely hard" and mystery3 is "hard".
+
+Step 4: attempting a simple sudoku puzzle solver using a "unique"
+character strategy.
+
+As a last check to see if a simple strategy more in line with a human
+approach will bring additional colour to my tests above, I constructed
+a sudoku algorithm which goes through the board and inputs in cells where
+only one unique character can be placed. Once all possible unique places
+are filled in one attempt, one can keep cycling through until either
+the whole board is filled or there are no more unique character places
+available.
+
+Unfortunately, neither mystery1 nor mystery3 can be solved just using
+this method, which means both boards require more complex strategies
+to solve. However, I tested the algorithm on easy.dat and medium.dat
+and easy.dat was solved in 4 iterations of a full board sweep whilst
+medium.dat was solved in 7. Therefore at least from this algorithm we
+can conclude that mystery1 and mystery3 are harder than easy.dat and
+medium.dat, and deserve their "hard" and "extremely hard" categories
+as per Q5.
+
